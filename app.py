@@ -159,5 +159,55 @@ def update_precio(id_moneda):
 	return jsonify({'precio': precio.json() })
 
 
+######### ENTIDAD CUENTA_BANCARIA ###########
+#LISTAR
+@app.route('/api/cuenta_bancaria', methods=['GET'])
+def get_cuenta():
+	cuentas = [ cuenta.json() for cuenta in Cuenta_bancaria.query.all() ] 
+	return jsonify({'cuentas': cuentas })
+
+#INSERTAR (verifica id_usuario?)
+@app.route('/api/cuenta_bancaria', methods=['POST'])
+def create_cuenta():
+	json= request.get_json(force=True)
+	if json.get('id_usuario') is None:
+		return jsonify({'message': 'El formato está mal'}), 400
+	cuentas= Cuenta_bancaria.create(json['id_usuario'],json['balance'])
+	return jsonify({'cuenta_bancaria': cuentas.json()})
+
+ #ELIMINAR
+ # Endpoint para eliminar el MONEDA con numero_cuenta igual a <numero_cuenta>
+@app.route('/api/cuenta_bancaria/<numero_cuenta>', methods=['DELETE'])
+def delete_cuenta(id_usuario):
+	cuenta = Cuenta_bancaria.query.filter_by(id_usuario=id_usuario).first()
+	if cuenta is None:
+		return jsonify({'message': 'La cuenta bancaria no existe'}), 404
+
+	cuenta.delete()
+
+	return jsonify({'cuenta_bancaria': cuenta.json() })
+
+ #ACTUALIZAR
+ # Endpoint para actualizar los datos de un usuario en la bd
+ #debo actualizar sigla, nombre
+@app.route('/api/cuenta_bancaria/<numero_cuenta>', methods=['PUT'])
+def update_cuenta(id_usuario):
+	cuenta = Cuenta_bancaria.query.filter_by(id_usuario=id_usuario).first()
+	if cuenta is None:
+		return jsonify({'message': 'Cuenta bancaria does not exists'}), 404
+
+	json = request.get_json(force=True)
+	
+	##Se actualiza el balance
+	if json.get('balance') is None :
+		return jsonify({'message': 'Bad request'}), 400
+	cuenta.balance = json['balance']
+
+	cuenta.update()
+
+	return jsonify({'cuenta_bancaria': cuenta.json() })
+
+
 if __name__ == '__main__':
 	app.run(debug=True)
+

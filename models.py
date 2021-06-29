@@ -13,7 +13,7 @@ class Pais(db.Model):
 	cod_pais = db.Column(db.Integer, primary_key=True) #primary key
 	nombre = db.Column(db.String(45), nullable=False) #atributo no nulo 
 
-	#relacion pais usuario
+	#relacion pais usuario(creo que no es necesario)
 	usuario = db.relationship('Usuario', lazy='dynamic')
 	
 	#Instancia un pais y lo guarda en la base de datos
@@ -125,6 +125,49 @@ class Precio_Moneda(db.Model):
 			'id_moneda': self.id_moneda,
 			'fecha': self.fecha,
 			'valor': self.valor
+		}
+	
+	def update(self):
+		self.save()
+
+	def delete(self):
+		try:
+			db.session.delete(self)
+			db.session.commit()
+			return True
+		except:
+			return False
+
+#Creamos entidad cuenta_bancaria(asumo que el numero se hace solo)
+class Cuenta_bancaria(db.Model):
+	_tablename_= 'cuenta_bancaria'
+	numero_cuenta = db.Column(db.Integer, primary_key=True) #primary key
+	id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False) #atributo no nulo, FK
+	balance = db.Column(db.Float, nullable=False) #atributo no nulo 
+
+	#relacion cuenta_bancaria y usuario
+	usuario = db.relationship('Usuario', lazy='dynamic')
+	
+	#Instancia una cuenta bancaria y lo guarda en la base de datos
+	@classmethod
+	def create(cls, id_usuario,balance):
+		pais = Cuenta_bancaria(id_usuario=id_usuario,balance=balance)
+		return pais.save()
+	
+	#Guarda la cuenta bancaria
+	def save(self):
+		try:
+			db.session.add(self)
+			db.session.commit()
+			return self
+		except: 
+			return False
+	
+	def json(self):
+		return {
+			'numero_cuenta': self.numero_cuenta,
+			'id_usuario': self.id_usuario,
+			'balance': self.balance
 		}
 	
 	def update(self):
