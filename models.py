@@ -180,3 +180,56 @@ class Cuenta_bancaria(db.Model):
 			return True
 		except:
 			return False
+		
+		
+# Creamos la entidad Usuario
+class Usuario(db.Model):
+	__tablename__ = 'usuario'
+	id = db.Column(db.Integer, primary_key=True) #PK
+	nombre = db.Column(db.String(50), nullable=False) #NOT NULL
+	apellido = db.Column(db.String(50), nullable=False)#NOT NULL
+	correo = db.Column(db.String(50), nullable=False)#NOT NULL
+	contraseña = db.Column(db.String(50), nullable=False)#NOT NULL
+	pais = db.Column(db.Integer, db.ForeignKey('pais.cod_pais'),nullable=False) #FK, NOT NULL
+	fecha_registro = db.Column(db.DateTime(), nullable=False, default=db.func.current_timestamp()) #NOT NULL
+
+	#relación usuario y cuenta_bancaria
+	cuentas_bancarias = db.relationship('Cuenta_bancaria', lazy='dynamic')
+
+	#relación usuario y pais (creo que esta no se pone, o si es que se pone, no es dynamic 
+	#paises = db.relationship('Pais', lazy='dynamic')
+	
+	@classmethod
+	def create(cls, username):
+		# Instanciamos un nuevo usuario y lo guardamos en la bd
+		nombre = Usuario(nombre=nombre)
+		return nombre.save()
+
+	def save(self):
+		try:
+			db.session.add(self)
+			db.session.commit()
+
+			return self
+		except:
+			return False
+	def json(self):
+		return {
+			'id': self.id,
+			'nombre': self.nombre,
+			'apellido': self.apellido,
+                        'correo': self.correo,
+                        'contraseña': self.contraseña,
+                        'pais': self.pais,
+                        'fecha_registro': self.fecha_registro
+		}
+	def update(self):
+		self.save()
+	def delete(self):
+		try:
+			db.session.delete(self)
+			db.session.commit()
+
+			return True
+		except:
+			return False
