@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from config import config
-from models import Moneda, Pais, Precio_Moneda,db
+from models import Usuario, Moneda, Pais, Cuenta_bancaria, Precio_Moneda, db
 from flask import request
 
 def create_app(enviroment):
@@ -206,6 +206,55 @@ def update_cuenta(id_usuario):
 	cuenta.update()
 
 	return jsonify({'cuenta_bancaria': cuenta.json() })
+
+
+###### ENTIDAD USUARIO ########
+
+# Endpoint para obtener todos los usuarios
+@app.route('/api/usuario', methods=['GET'])
+def get_usuario():
+	usuarios = [ usuario.json() for usuario in Usuario.query.all() ] 
+	return jsonify({'usuarios': usuarios })
+
+# Endpoint para insertar un usuario en la bd
+@app.route('/api/usuario/', methods=['POST'])
+def create_usuario():
+	json = request.get_json(force=True)
+
+	if json.get('nombre') is None:
+		return jsonify({'message': 'El formato está mal'}), 400
+
+	usuario = Usuario.create(json['nombre'])
+
+	return jsonify({'usuario': usuario.json() })
+
+# Endpoint para actualizar los datos de un usuario en la bd
+@app.route('/api/usuario/<id>', methods=['PUT'])
+def update_usuario(id):
+	usuario = Usuario.query.filter_by(id=id).first()
+	if usuario is None:
+		return jsonify({'message': 'User does not exists'}), 404
+
+	json = request.get_json(force=True)
+	if json.get('nombre') is None:
+		return jsonify({'message': 'Bad request'}), 400
+
+	user.username = json['nombre']
+
+	user.update()
+
+	return jsonify({'usuario': usuario.json() })
+
+# Endpoint para eliminar el usuario con id igual a <id>
+@app.route('/api/usuario/<id>', methods=['DELETE'])
+def delete_usuario(id):
+	usuario = Usuario.query.filter_by(id=id).first()
+	if usuario is None:
+		return jsonify({'message': 'El usuario no existe'}), 404
+
+	usuario.delete()
+
+	return jsonify({'usuario': usuario.json() })
 
 
 if __name__ == '__main__':
