@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from config import config
-from models import Usuario, Moneda, Pais, Cuenta_bancaria, Precio_Moneda, db
+from models import Usuario, Moneda, Pais, Cuenta_bancaria, Precio_Moneda,Usuario_tiene_moneda, db
 from flask import request
 
 def create_app(enviroment):
@@ -117,7 +117,7 @@ def get_precios():
 	return jsonify({'precios': precios })
 
 #INSERTAR
-@app.route('/api/precio/', methods=['POST'])
+@app.route('/api/precio', methods=['POST'])
 def create_precio():
 	json = request.get_json(force=True)
 
@@ -217,14 +217,14 @@ def get_usuario():
 	return jsonify({'usuarios': usuarios })
 
 # Endpoint para insertar un usuario en la bd
-@app.route('/api/usuario/', methods=['POST'])
+@app.route('/api/usuario', methods=['POST'])
 def create_usuario():
 	json = request.get_json(force=True)
 
 	if json.get('nombre') is None:
 		return jsonify({'message': 'El formato está mal'}), 400
 
-	usuario = Usuario.create(json['nombre'])
+	usuario = Usuario.create(json['nombre'],json['apellido'],json['correo'],json['contraseña'], json['pais'])
 
 	return jsonify({'usuario': usuario.json() })
 
@@ -238,10 +238,9 @@ def update_usuario(id):
 	json = request.get_json(force=True)
 	if json.get('nombre') is None:
 		return jsonify({'message': 'Bad request'}), 400
+	usuario.nombre = json['nombre']
 
-	user.username = json['nombre']
-
-	user.update()
+	usuario.update()
 
 	return jsonify({'usuario': usuario.json() })
 
@@ -253,10 +252,8 @@ def delete_usuario(id):
 		return jsonify({'message': 'El usuario no existe'}), 404
 
 	usuario.delete()
-
 	return jsonify({'usuario': usuario.json() })
 
-print (1)
 #########  USUARIO_TIENE_MONEDA DEPENDE USUARIO Y MONEDA###########
 #LISTAR
 @app.route('/api/usuario_tiene_moneda', methods=['GET'])
@@ -265,10 +262,10 @@ def get_usuario_moneda():
 	return jsonify({'usuario moneda': usuario_monedas })
 
 #INSERTAR (verifica id_usuario?)
-@app.route('/api/usuario_tiene_moneda/', methods=['POST'])
+@app.route('/api/usuario_tiene_moneda', methods=['POST'])
 def create_usuario_moneda():
 	json= request.get_json(force=True)
-	if json.get('id_usuario') is None and json.get('id_moneda') is None:
+	if (json.get('id_usuario') is None) and (json.get('id_moneda') is None):
 		return jsonify({'message': 'El formato está mal'}), 400
 	usuario_monedas = Usuario_tiene_moneda.create(json['id_usuario'],json['id_moneda'],json['balance'])
 	return jsonify({'usuario moneda': usuario_monedas.json()})
@@ -276,7 +273,7 @@ def create_usuario_moneda():
  #ELIMINAR
  # Endpoint para eliminar el MONEDA con id_usuario e id_moneda igual a <id_usuario,id_moneda>
 @app.route('/api/usuario_tiene_moneda/<id_usuario>,<id_moneda>', methods=['DELETE'])
-def delete_usuario_moneda(id_usuario):
+def delete_usuario_moneda(id_usuario,id_moneda):
 	cuenta = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
 	if cuenta is None:
 		return jsonify({'message': 'el usuario moneda no existe'}), 404
