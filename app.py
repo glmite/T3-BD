@@ -91,7 +91,7 @@ def delete_moneda(id):
  # Endpoint para actualizar los datos de un usuario en la bd
  #debo actualizar sigla, nombre
 @app.route('/api/moneda/<id>', methods=['PUT'])
-def update_user(id):
+def update_moneda(id):
 	moneda = Moneda.query.filter_by(id=id).first()
 	if moneda is None:
 		return jsonify({'message': 'Moneda does not exists'}), 404
@@ -260,7 +260,7 @@ print (1)
 #########  USUARIO_TIENE_MONEDA DEPENDE USUARIO Y MONEDA###########
 #LISTAR
 @app.route('/api/usuario_tiene_moneda', methods=['GET'])
-def get_cuenta():
+def get_usuario_moneda():
 	usuario_monedas = [ usuario_moneda.json() for usuario_moneda in Usuario_tiene_moneda.query.all() ]
 	return jsonify({'usuario moneda': usuario_monedas })
 
@@ -275,8 +275,8 @@ def create_usuario_moneda():
 
  #ELIMINAR
  # Endpoint para eliminar el MONEDA con id_usuario e id_moneda igual a <id_usuario,id_moneda>
-@app.route('/api/usuario_tiene_moneda/<id_usuario,id_moneda>', methods=['DELETE'])
-def delete_cuenta(id_usuario):
+@app.route('/api/usuario_tiene_moneda/<id_usuario>,<id_moneda>', methods=['DELETE'])
+def delete_usuario_moneda(id_usuario):
 	cuenta = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
 	if cuenta is None:
 		return jsonify({'message': 'el usuario moneda no existe'}), 404
@@ -288,8 +288,8 @@ def delete_cuenta(id_usuario):
  #ACTUALIZAR
  # Endpoint para actualizar los datos de un usuario_tiene_moneda en la bd
  #debo actualizar balance
-@app.route('/api/usuario_tiene_moneda/<id_usuario,id_moneda>', methods=['PUT'])
-def update_cuenta(id_usuario,id_moneda):
+@app.route('/api/usuario_tiene_moneda/<id_usuario>,<id_moneda>', methods=['PUT'])
+def update_usuario_moneda(id_usuario,id_moneda):
 	cuenta = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
 	if cuenta is None:
 		return jsonify({'message': 'el usuario moneda no existe'}), 404
