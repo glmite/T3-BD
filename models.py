@@ -13,8 +13,8 @@ class Pais(db.Model):
 	cod_pais = db.Column(db.Integer, primary_key=True) #primary key
 	nombre = db.Column(db.String(45), nullable=False) #atributo no nulo
 
+	usuario= db.relationship('Usuario', cascade="all,delete", backref="parent")
 	#relacion pais usuario(creo que no es necesario)
-	usuario = db.relationship('Usuario', lazy='dynamic')
 
 	#Instancia un pais y lo guarda en la base de datos
 	@classmethod
@@ -55,11 +55,8 @@ class Moneda(db.Model):
 	sigla = db.Column(db.String(10), nullable=False) #atributo no nulo
 	nombre = db.Column(db.String(80), nullable=False) #atributo no nulo
 
-	#relación moneda y sus precio
-	precios = db.relationship('Precio_Moneda', lazy='dynamic')
-
-	#relación moneda y usuario
-	usuario_tiene_moneda = db.relationship('Usuario_tiene_moneda', lazy='dynamic')
+	precio_moneda= db.relationship('Precio_Moneda', cascade="all,delete", backref="parent")
+	usuario_moneda= db.relationship('Usuario_tiene_moneda', cascade="all,delete", backref="parent")
 
 	#Instancia moneda
 	@classmethod
@@ -102,8 +99,6 @@ class Precio_Moneda(db.Model):
 	fecha = db.Column(db.DateTime(), default=db.func.current_timestamp(),primary_key= True) #PK
 	valor = db.Column(db.Float, nullable=False) #atributo flotante no nulo
 
-	#Relación con moneda
-	moneda = db.relationship("Moneda")
 
 	#Instancia un precio a la moneda
 	@classmethod
@@ -146,7 +141,7 @@ class Cuenta_bancaria(db.Model):
 	balance = db.Column(db.Float, nullable=False) #atributo no nulo
 
 	#relacion cuenta_bancaria y usuario
-	usuario = db.relationship('Usuario', lazy='dynamic')
+	#usuario = db.relationship('Usuario')
 
 	#Instancia una cuenta bancaria y lo guarda en la base de datos
 	@classmethod
@@ -184,26 +179,24 @@ class Cuenta_bancaria(db.Model):
 
 # Creamos la entidad Usuario
 class Usuario(db.Model):
-	__tablename__ = 'usuario'
+	_tablename_ = 'usuario'
 	id = db.Column(db.Integer, primary_key=True) #PK
 	nombre = db.Column(db.String(50), nullable=False) #NOT NULL
-	apellido = db.Column(db.String(50), nullable=False)#NOT NULL
+	apellido = db.Column(db.String(50), nullable=True)#NOT NULL
 	correo = db.Column(db.String(50), nullable=False)#NOT NULL
 	contraseña = db.Column(db.String(50), nullable=False)#NOT NULL
 	pais = db.Column(db.Integer, db.ForeignKey('pais.cod_pais'),nullable=False) #FK, NOT NULL
 	fecha_registro = db.Column(db.DateTime(), nullable=False, default=db.func.current_timestamp()) #NOT NULL
 
-	#relación usuario y cuenta_bancaria
-	cuentas_bancarias = db.relationship('Cuenta_bancaria', lazy='dynamic')
-
 	#relación usuario y pais (creo que esta no se pone, o si es que se pone, no es dynamic
-	#paises = db.relationship('Pais', lazy='dynamic')
-
+	cuenta_usuario= db.relationship('Cuenta_bancaria', cascade="all,delete", backref="parent")
+	#user_mon= db.relationship('Usuario_tiene_moneda', cascade="all,delete", backref="parent")
+	
 	@classmethod
-	def create(cls, username):
+	def create(cls, nombre, apellido,correo,contraseña, pais):
 		# Instanciamos un nuevo usuario y lo guardamos en la bd
-		nombre = Usuario(nombre=nombre)
-		return nombre.save()
+		user= Usuario(nombre=nombre,apellido=apellido,correo=correo,contraseña=contraseña,pais=pais)
+		return user.save()
 
 	def save(self):
 		try:
@@ -218,10 +211,10 @@ class Usuario(db.Model):
 			'id': self.id,
 			'nombre': self.nombre,
 			'apellido': self.apellido,
-                        'correo': self.correo,
-                        'contraseña': self.contraseña,
-                        'pais': self.pais,
-                        'fecha_registro': self.fecha_registro
+            'correo': self.correo,
+            'contraseña': self.contraseña,
+            'pais': self.pais,
+            'fecha_registro': self.fecha_registro
 		}
 	def update(self):
 		self.save()
@@ -236,16 +229,10 @@ class Usuario(db.Model):
 
 # Creamos la entidad Usuario_tiene_moneda
 class Usuario_tiene_moneda(db.Model):
-	__tablename__ = 'usuario_tiene_moneda'
+	_tablename_ = 'usuario_tiene_moneda'
 	id_usuario = db.Column(db.Integer, db.ForeignKey('usuario.id'), primary_key=True) #PK Y FK
 	id_moneda = db.Column(db.Integer, db.ForeignKey('moneda.id'), primary_key=True ) #PK Y FK
 	balance = db.Column(db.Float, nullable=False) #NOT NULL
-
-	#relación usuario y usuario_tiene_moneda
-	usuario = db.relationship('Usuario', lazy='dynamic')
-
-	#relación moneda y usuario_tiene_moneda
-	moneda = db.relationship('Moneda', lazy='dynamic')
 
 	@classmethod
 	def create(cls, id_usuario,id_moneda,balance):
