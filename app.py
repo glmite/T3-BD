@@ -19,7 +19,7 @@ app = create_app(enviroment)
 #Listar
 @app.route('/api/pais', methods=['GET'])
 def get_pais():
-	paises = [ pais.json() for pais in Pais.query.all() ] 
+	paises = [ pais.json() for pais in Pais.query.all() ]
 	return jsonify({'paises': paises })
 
 #Insertar un pais
@@ -63,7 +63,7 @@ def delete_pais(cod_pais):
 #LISTAR
 @app.route('/api/moneda', methods=['GET'])
 def get_moneda():
-	monedas = [ moneda.json() for moneda in Moneda.query.all() ] 
+	monedas = [ moneda.json() for moneda in Moneda.query.all() ]
 	return jsonify({'monedas': monedas })
 
 #INSERTAR
@@ -97,7 +97,7 @@ def update_user(id):
 		return jsonify({'message': 'Moneda does not exists'}), 404
 
 	json = request.get_json(force=True)
-	
+
 	##Supongo que se actualizan los 2
 	if (json.get('nombre') is None) and (json.get('sigla') is None):
 		return jsonify({'message': 'Bad request'}), 400
@@ -113,7 +113,7 @@ def update_user(id):
 #LISTAR
 @app.route('/api/precio', methods=['GET'])
 def get_precios():
-	precios = [ precio.json() for precio in Precio_Moneda.query.all() ] 
+	precios = [ precio.json() for precio in Precio_Moneda.query.all() ]
 	return jsonify({'precios': precios })
 
 #INSERTAR
@@ -149,11 +149,11 @@ def update_precio(id_moneda):
 		return jsonify({'message': 'El precio asociado a esa moneda no existe'}), 404
 
 	json = request.get_json(force=True)
-	
+
 	if json.get('valor') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	precio.valor = json['valor']
-	
+
 	precio.update()
 
 	return jsonify({'precio': precio.json() })
@@ -163,7 +163,7 @@ def update_precio(id_moneda):
 #LISTAR
 @app.route('/api/cuenta_bancaria', methods=['GET'])
 def get_cuenta():
-	cuentas = [ cuenta.json() for cuenta in Cuenta_bancaria.query.all() ] 
+	cuentas = [ cuenta.json() for cuenta in Cuenta_bancaria.query.all() ]
 	return jsonify({'cuentas': cuentas })
 
 #INSERTAR (verifica id_usuario?)
@@ -197,7 +197,7 @@ def update_cuenta(id_usuario):
 		return jsonify({'message': 'Cuenta bancaria does not exists'}), 404
 
 	json = request.get_json(force=True)
-	
+
 	##Se actualiza el balance
 	if json.get('balance') is None :
 		return jsonify({'message': 'Bad request'}), 400
@@ -213,7 +213,7 @@ def update_cuenta(id_usuario):
 # Endpoint para obtener todos los usuarios
 @app.route('/api/usuario', methods=['GET'])
 def get_usuario():
-	usuarios = [ usuario.json() for usuario in Usuario.query.all() ] 
+	usuarios = [ usuario.json() for usuario in Usuario.query.all() ]
 	return jsonify({'usuarios': usuarios })
 
 # Endpoint para insertar un usuario en la bd
@@ -256,7 +256,56 @@ def delete_usuario(id):
 
 	return jsonify({'usuario': usuario.json() })
 
+print (1)
+#########  USUARIO_TIENE_MONEDA DEPENDE USUARIO Y MONEDA###########
+#LISTAR
+@app.route('/api/usuario_tiene_moneda', methods=['GET'])
+def get_cuenta():
+	usuario_monedas = [ usuario_moneda.json() for usuario_moneda in Usuario_tiene_moneda.query.all() ]
+	return jsonify({'usuario moneda': usuario_monedas })
+
+#INSERTAR (verifica id_usuario?)
+@app.route('/api/usuario_tiene_moneda/', methods=['POST'])
+def create_usuario_moneda():
+	json= request.get_json(force=True)
+	if json.get('id_usuario') is None and json.get('id_moneda') is None:
+		return jsonify({'message': 'El formato está mal'}), 400
+	usuario_monedas = Usuario_tiene_moneda.create(json['id_usuario'],json['id_moneda'],json['balance'])
+	return jsonify({'usuario moneda': usuario_monedas.json()})
+
+ #ELIMINAR
+ # Endpoint para eliminar el MONEDA con id_usuario e id_moneda igual a <id_usuario,id_moneda>
+@app.route('/api/usuario_tiene_moneda/<id_usuario,id_moneda>', methods=['DELETE'])
+def delete_cuenta(id_usuario):
+	cuenta = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
+	if cuenta is None:
+		return jsonify({'message': 'el usuario moneda no existe'}), 404
+
+	cuenta.delete()
+
+	return jsonify({'usuario_tiene_moneda': cuenta.json() })
+
+ #ACTUALIZAR
+ # Endpoint para actualizar los datos de un usuario_tiene_moneda en la bd
+ #debo actualizar balance
+@app.route('/api/usuario_tiene_moneda/<id_usuario,id_moneda>', methods=['PUT'])
+def update_cuenta(id_usuario,id_moneda):
+	cuenta = Usuario_tiene_moneda.query.filter_by(id_usuario=id_usuario,id_moneda=id_moneda).first()
+	if cuenta is None:
+		return jsonify({'message': 'el usuario moneda no existe'}), 404
+
+	json = request.get_json(force=True)
+
+	##Se actualiza el balance
+	if json.get('balance') is None :
+		return jsonify({'message': 'Bad request'}), 400
+	cuenta.balance = json['balance']
+
+	cuenta.update()
+
+	return jsonify({'usuario_tiene_moneda': cuenta.json() })
 
 if __name__ == '__main__':
 	app.run(debug=True)
+
 
