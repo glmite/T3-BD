@@ -1,0 +1,24 @@
+<?php
+//agregue la siguiente linea para abrir la base de datos
+include '../db_config.php';
+include '../include/navbar.html';
+include 'profile.php';
+?>
+    <div class='container-fluid'>
+        <div class="row p-3">
+            <h1>Mi Perfil</h1>
+        </div>
+        <div class="row p-3">
+            <div class="col">
+                <!-- Mostrar aquí los datos del usuario de la sesión -->
+                <div class="container shadow-lg rounded m-auto p-5">
+                    <p>Nombre Completo: <?php echo $row["nombre"] ?>  <?php echo $row["apellido"] ?></p>
+                    <p>Correo: <?php echo $row["correo"] ?> </p>
+                    <p>País: <?php echo $row["pais"] ?> </p>
+                    <p>Fecha de Ingreso: <?php echo $row["fecha_registro"] ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

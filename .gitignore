@@ -1,2 +1,3 @@
-/__pycache__
-/config.py
+/API/__pycache__
+/API/config.py
+/db_config.php

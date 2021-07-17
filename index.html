@@ -1,0 +1,123 @@
+<?php 
+include 'include/navbar.html';?>
+
+
+<div class="hero-image">
+  <div class="hero-text">
+
+<?php
+
+//El titulo de la pagina cambiará dependiendo si se inició sesión o no. Si hay un usuario loggeado entonces aparecera Hola! Nombre Apellido. Si ademas
+//el usuario es administrador aparecerá Hola! nombre apellido (admin). Si no hay usuario loggeado entonces aparecera "Monedero Crypto USM"
+
+if(isset($_SESSION["usuario"])==FALSE){
+	echo '<h1>Monedero crypto USM</h1>';
+	echo '<h4>Servicio de e-Wallet confiable y seguro. Unete a nosotros, Crypto USM billetera lider del mercado.</h4>';
+}
+else{
+
+$query_nombre = 'SELECT nombre, apellido FROM usuario WHERE correo=$1';    
+$query_nombre = pg_query_params($dbconn, $query_nombre, array($_SESSION["usuario"]));
+$query_nombre = pg_fetch_assoc($query_nombre);
+$nombre_usr = $query_nombre["nombre"];
+$apellido_usr = $query_nombre["apellido"];
+
+if($type_user=='t'){
+$admin = "(Admin)";
+echo '<h1 style="color:white;">Hola! ' . $nombre_usr . " " . $apellido_usr . " ". $admin .'</h1>';}
+
+else{echo '<h1 style="color:white;">Hola! ' . $nombre_usr . " " . $apellido_usr .'</h1>';}
+
+
+
+
+
+}
+
+
+?>
+
+    <h6>Sitio web oficial del Prestigio-coin. La criptomoneda del futuro!</h6>
+  </div>
+</div>
+
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>¿Quienes somos?</h1>
+    </div>
+    <div class="row p-3">
+        <div class="col">
+            <div class="container shadow-lg rounded m-auto p-5">
+                <p>Somos la billetera lider de criptomonedas en todas las universidades chilenas. Creada en 2021 por el departamento de informática de la universidad Técnica Federico Santa María en colaboración con un grupo de estudiantes, mas conocidos como el legendario Equipo 1 </p>
+		<p>Tenemos la misión de conectar a latinoamérica a este nuevo sistema financiero y la visión de liderar el mercado global de criptomonedas, ofreciendo diversas oportunidades de inversión financiera, confiables y seguras.  </p>
+                <img src="img/stonks.png" class="img-fluid mx-auto d-block" alt="Stonks" style="max-width: 50%;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Novedades</h1>
+    </div>
+    <div class="row p-3">
+        <div class="col">
+
+	<h6>(09-06-2021)</h6> Elon Musk invierte en Prestigio-Coin y se triplica su fortuna.
+
+	<h6>(01-06-2021)</h6> Entrevista en The New York Times: "Prestige-coin a threat to the dollar "
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+body, html {
+    height: 100%;
+}
+
+
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://miro.medium.com/max/3840/1*pjdHVVeVvfgFwH1XvlUerg.jpeg");
+
+  height: 50%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.hero-text {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+
+h1 {
+  text-align: center;
+}
+
+</style>
+
+
+
+</body>
+
+</html>
+
