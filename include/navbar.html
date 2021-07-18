@@ -29,7 +29,11 @@ include $_SERVER['DOCUMENT_ROOT']. '/sesion/valida_sesion.php';
                 <a class="nav-link" href="/admin/users/all.html">Usuarios</a>
             </li>';
 }?>
-
+<?php if(isset($_SESSION["usuario"])!=FALSE){
+    echo '<li class="nav-item">
+              <a class="nav-link" href="/simulacion.html">Simulación</a>
+          </li>';
+} ?>
         </ul>
         <ul class="navbar-nav ml-auto">
 
@@ -39,6 +43,7 @@ include $_SERVER['DOCUMENT_ROOT']. '/sesion/valida_sesion.php';
                 <a class="nav-link" href="/sesion/logout.php">Cerrar Sesión</a>
             </li>';
 } ?>
+
 
 
             <!-- Visible solo si NO hay una sesión iniciada -->
