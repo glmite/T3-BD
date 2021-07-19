@@ -233,6 +233,13 @@ class Usuario(db.Model):
 			return True
 		except:
 			return False
+		
+	def custom1(year_reg):
+		try:
+			result= db.session.execute('SELECT * FROM USUARIO WHERE EXTRACT(YEAR FROM fecha_registro) = :year',{'year':year_reg})
+			return result
+		except:
+			return False
 
 	def custom3(cod_pais):
 		try:
