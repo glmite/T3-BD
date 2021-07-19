@@ -302,6 +302,11 @@ def update_usuario_moneda(id_usuario,id_moneda):
 
 	return jsonify({'usuario_tiene_moneda': cuenta.json() })
 
+@app.route('/api/consultas/1/<year_reg>', methods=['GET'])
+def get_custom1(year):
+	usuarios = [dict(usuario) for usuario in Usuario.custom1(year_reg=year_reg).fetchall()]
+	return jsonify({'Usuarios': usuarios })
+
 @app.route('/api/consultas/2/<max_balance>', methods=['GET'])
 def get_custom2(max_balance):
 	cuentas = [dict(cuenta) for cuenta in Cuenta_bancaria.custom2(max_balance=max_balance).fetchall()]
