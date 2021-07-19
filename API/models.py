@@ -175,6 +175,13 @@ class Cuenta_bancaria(db.Model):
 			return True
 		except:
 			return False
+	def custom2(max_balance):
+		try:
+			result= db.session.execute('SELECT * FROM cuenta_bancaria WHERE balance>= :max',{'max':max_balance})
+			return result
+		except:
+			return False
+
 
 
 # Creamos la entidad Usuario
@@ -224,6 +231,13 @@ class Usuario(db.Model):
 			db.session.commit()
 
 			return True
+		except:
+			return False
+
+	def custom3(cod_pais):
+		try:
+			result= db.session.execute('SELECT * FROM Usuario WHERE pais = :cod_p',{'cod_p':cod_pais})
+			return result
 		except:
 			return False
 
