@@ -1,7 +1,7 @@
 <?php 
 include '../../db_config.php';
-include '../../include/navbar.html'; ?>
-<?php include 'CRUD/update.php'; ?>
+include '../../include/navbar.html';
+include 'CRUD/update.php'; ?>
     <div class='container-fluid'>
         <div class="row p-3">
             <h1>Editar Usuario</h1>
@@ -10,25 +10,25 @@ include '../../include/navbar.html'; ?>
             <div class="col">
                 <div class="container shadow-lg rounded m-auto p-5">
                     <!-- El formulario debe aparecer llenado con los valores actuales de los parámetros -->
-                    <form action="/admin/users/CRUD/update.php" method="POST">
+                    <form action="/CRUD-simulacion/usuario/CRUD/update.php" method="POST">
                         <div class="form-group">
-                            <input type="hidden" name="id" value=" <?php echo $id ?> " />
+                            <input type="hidden" name="id" value=" <?php echo $identificador ?> " />
                             <?php
                             echo ' 
                             <label for="name">Nombre</label>
-                            <input type="text" class="form-control" placeholder="nombre" value="' . $info_usuario["usuario"] . '" id="name" name = "name" required>
+                            <input type="text" class="form-control" placeholder="nombre" value="' . $nombre . '" id="name" name = "nombre" required>
                         </div>
                         <div class="form-group">
                             <label for="surname">Apellido</label>
-                            <input type="text" class="form-control" placeholder="apellido" value=" ' . $info_usuario["apellido"] . '" name = "surname" id="surname" name = "surname">
+                            <input type="text" class="form-control" placeholder="apellido" value=" ' . $apellido . '" id="surname" name = "apellido">
                         </div>
                         <div class="form-group">
                             <label for="email">Correo Electrónico</label>
-                            <input type="email" class="form-control" placeholder="correo" value="' . $info_usuario["correo"] . '"  name = "email" id="email" required>
+                            <input type="email" class="form-control" placeholder="correo" value="' . $correo . '"  name = "correo" id="email" required>
                         </div>
                         <div class="form-group">
                             <label for="pwd">Contraseña</label>
-                            <input type="password" class="form-control" placeholder="Contraseña" name="pwd" id="pwd">
+                            <input type="password" class="form-control" placeholder="Contraseña" name="contraseña" id="pwd">
                         </div>
                         '
                         ?>
@@ -36,13 +36,12 @@ include '../../include/navbar.html'; ?>
                        
                         <div class="form-group"  >
                             <label for="country">País</label>
-                            <select class="form-control" name = "country" id="country"  >
-                                <option value='<?php echo $info_usuario["cod_pais"]?>' hidden selected='selected'><?php echo $info_usuario["pais"]?></option>
-                              <option value="1">Angola</option>
+                            <select class="form-control" name = "pais" id="country"  >
+                                <option value='<?php echo $cod_pais?>' hidden selected='selected'><?php echo $pais?></option>
+                              <option value="1">Chile</option>
                               <option value="2">Sudáfrica</option>
                               <option value="3">Canadá</option>
                               <option value="4">Estados Unidos</option>
-                              <option value="5">Chile</option>
                               <option value="6">Australia</option>
                               <option value="7">India</option>
                               <option value="8">Corea del Sur</option>
@@ -52,7 +51,7 @@ include '../../include/navbar.html'; ?>
                           </div>
 
                         <div class='d-flex justify-content-end'>
-                            <a class="btn btn-secondary mx-3" href="/admin/users/all.html">Volver</a>
+                            <a class="btn btn-secondary mx-3" href="/CRUD-simulacion/usuario/all.html">Volver</a>
                             <button type="submit" class="btn btn-primary">Guardar cambios</button>
                         </div>
                       </form>
