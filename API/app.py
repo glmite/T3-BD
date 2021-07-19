@@ -302,6 +302,17 @@ def update_usuario_moneda(id_usuario,id_moneda):
 
 	return jsonify({'usuario_tiene_moneda': cuenta.json() })
 
+@app.route('/api/consultas/2/<max_balance>', methods=['GET'])
+def get_custom2(max_balance):
+	cuentas = [dict(cuenta) for cuenta in Cuenta_bancaria.custom2(max_balance=max_balance).fetchall()]
+	return jsonify({'Cuentas Bancarias': cuentas })
+
+
+@app.route('/api/consultas/3/<cod_pais>', methods=['GET'])
+def get_custom3(cod_pais):
+	usuarios = [dict(usuario) for usuario in Usuario.custom3(cod_pais=cod_pais).fetchall()]
+	return jsonify({'Usuarios': usuarios })
+
 if __name__ == '__main__':
 	app.run(debug=True)
 
