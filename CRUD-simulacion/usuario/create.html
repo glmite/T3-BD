@@ -8,7 +8,7 @@ include $_SERVER['DOCUMENT_ROOT']. '/include/navbar.html'; ?>
             <div class="col">
                 <div class="container shadow-lg rounded m-auto p-5">
 <!-- Se agregó el metodo post -->
-                    <form action="/admin/users/CRUD/create.php" method="POST">
+                    <form action="/CRUD-simulacion/usuario/CRUD/create.php" method="POST">
                         <div class="form-group">
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" placeholder="Nombre" name = "name" id="name" required>
@@ -42,7 +42,7 @@ include $_SERVER['DOCUMENT_ROOT']. '/include/navbar.html'; ?>
                             </select>
                           </div>
                         <div class='d-flex justify-content-end'>
-                            <a class="btn btn-secondary mx-3" href="/admin/users/all.html">Volver</a>
+                            <a class="btn btn-secondary mx-3" href="/CRUD-simulacion/usuario/all.html">Volver</a>
                             <button type="submit" class="btn btn-primary">Crear Usuario</button>
                         </div>
                       </form>
