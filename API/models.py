@@ -136,7 +136,6 @@ class Precio_Moneda(db.Model):
 	def custom4(id):
 		try:
 			result= db.session.execute('SELECT MAX(valor) FROM precio_moneda WHERE  id_moneda=:id',{'id':id})
-			print(result)
 			return result
 		except:
 			return False
