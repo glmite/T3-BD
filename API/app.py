@@ -307,7 +307,7 @@ def get_custom1(year):
 	usuarios = [dict(usuario) for usuario in Usuario.custom1(year_reg=year_reg).fetchall()]
 	return jsonify({'Usuarios': usuarios })
 
-@app.route('/api/consultas/2/<max_balance>', methods=['GET'])
+@app.route('/api/consultas/2/<float:max_balance>', methods=['GET'])
 def get_custom2(max_balance):
 	cuentas = [dict(cuenta) for cuenta in Cuenta_bancaria.custom2(max_balance=max_balance).fetchall()]
 	return jsonify({'Cuentas Bancarias': cuentas })
@@ -317,6 +317,13 @@ def get_custom2(max_balance):
 def get_custom3(cod_pais):
 	usuarios = [dict(usuario) for usuario in Usuario.custom3(cod_pais=cod_pais).fetchall()]
 	return jsonify({'Usuarios': usuarios })
+
+@app.route('/api/consultas/4/<id_moneda>', methods=['GET'])
+def get_custom4(id_moneda):
+	id_moneda=float(id_moneda)
+	maximo = float(Precio_Moneda.custom4(id=id_moneda).fetchall()[0]["max"])
+	print(maximo)
+	return jsonify({'max_valor': maximo })
 
 if __name__ == '__main__':
 	app.run(debug=True)

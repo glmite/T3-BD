@@ -133,6 +133,15 @@ class Precio_Moneda(db.Model):
 		except:
 			return False
 
+	def custom4(id):
+		try:
+			result= db.session.execute('SELECT MAX(valor) FROM precio_moneda WHERE  id_moneda=:id',{'id':id})
+			print(result)
+			return result
+		except:
+			return False
+
+
 #Creamos entidad cuenta_bancaria(asumo que el numero se hace solo)
 class Cuenta_bancaria(db.Model):
 	_tablename_= 'cuenta_bancaria'
