@@ -28,3 +28,4 @@ foreach($usuarios as $i => $value){
  
 /* Este archivo debe manejar la lógica de obtener los datos de todos los usuarios */
 ?>
+
