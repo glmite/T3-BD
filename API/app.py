@@ -335,7 +335,6 @@ def get_custom3(cod_pais):
 def get_custom4(id_moneda):
 	id_moneda=float(id_moneda)
 	maximo = float(Precio_Moneda.custom4(id=id_moneda).fetchall()[0]["max"])
-	print(maximo)
 	return jsonify({'max_valor': maximo })
 
 @app.route('/api/consultas/5/<id_moneda>', methods=['GET'])
