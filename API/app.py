@@ -338,6 +338,12 @@ def get_custom4(id_moneda):
 	print(maximo)
 	return jsonify({'max_valor': maximo })
 
+@app.route('/api/consultas/5/<id_moneda>', methods=['GET'])
+def get_custom5(id_moneda):
+	id_moneda=float(id_moneda)
+	suma = float(Usuario_tiene_moneda.custom5(id=id_moneda).fetchall()[0]["sum"])
+	return jsonify({'Balance Total': suma })
+
 if __name__ == '__main__':
 	app.run(debug=True)
 
