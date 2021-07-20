@@ -291,3 +291,10 @@ class Usuario_tiene_moneda(db.Model):
 			return True
 		except:
 			return False
+		
+	def custom5(id):
+		try:
+			result= db.session.execute('SELECT SUM(balance) FROM Usuario_tiene_moneda WHERE  id_moneda=:id',{'id':id})
+			return result
+		except:
+			return False
