@@ -239,16 +239,16 @@ def update_usuario(id):
 	if json.get('nombre') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	usuario.nombre = json['nombre']
-	
+
 	if json.get('apellido') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	usuario.apellido = json['apellido']
-	
+
 
 	if json.get('correo') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	usuario.correo = json['correo']
-		
+
 	if json.get('pais') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	usuario.pais = json['pais']
@@ -345,5 +345,3 @@ def get_custom5(id_moneda):
 
 if __name__ == '__main__':
 	app.run(debug=True)
-
-
