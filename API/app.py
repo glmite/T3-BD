@@ -248,9 +248,6 @@ def update_usuario(id):
 	if json.get('correo') is None:
 		return jsonify({'message': 'Bad request'}), 400
 	usuario.apellido = json['correo']
-
-	if json.get('contraseña') not is None:
-		usuario.contraseña = json['contraseña']
 		
 	if json.get('pais') is None:
 		return jsonify({'message': 'Bad request'}), 400
