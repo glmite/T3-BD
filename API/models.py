@@ -206,7 +206,7 @@ class Usuario(db.Model):
 	#relación usuario y pais (creo que esta no se pone, o si es que se pone, no es dynamic
 	cuenta_usuario= db.relationship('Cuenta_bancaria', cascade="all,delete", backref="parent")
 	#user_mon= db.relationship('Usuario_tiene_moneda', cascade="all,delete", backref="parent")
-	
+
 	@classmethod
 	def create(cls, nombre, apellido,correo,contraseña, pais):
 		# Instanciamos un nuevo usuario y lo guardamos en la bd
@@ -241,7 +241,7 @@ class Usuario(db.Model):
 			return True
 		except:
 			return False
-		
+
 	def custom1(year_reg):
 		try:
 			result= db.session.execute('SELECT * FROM USUARIO WHERE EXTRACT(YEAR FROM fecha_registro) = :year',{'year':year_reg})
@@ -290,7 +290,7 @@ class Usuario_tiene_moneda(db.Model):
 			return True
 		except:
 			return False
-		
+
 	def custom5(id):
 		try:
 			result= db.session.execute('SELECT SUM(balance) FROM Usuario_tiene_moneda WHERE  id_moneda=:id',{'id':id})
