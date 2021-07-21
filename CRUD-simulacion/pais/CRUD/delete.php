@@ -1,12 +1,50 @@
 <?php
-include '../../../db_config.php';
+
+function callAPI($method, $url, $data){
+    $curl = curl_init();
+    switch ($method){
+       case "POST":
+          curl_setopt($curl, CURLOPT_POST, 1);
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+          break;
+       case "PUT":
+          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+          if ($data)
+             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+          break;
+          case "DELETE":
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
+            if ($data)
+               curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            break;
+       default:
+          if ($data)
+             $url = sprintf("%s?%s", $url, http_build_query($data));
+    }
+    // OPTIONS:
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+       'APIKEY: 111111111111111111111',
+       'Content-Type: application/json',
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    // EXECUTE:
+    $result = curl_exec($curl);
+    if(!$result){die("Connection Failure");}
+    curl_close($curl);
+    return $result;
+ }
+
 $numbers = preg_replace('/[^0-9]/', '', $_SERVER['REQUEST_URI']);
-$sql = "DELETE FROM usuario WHERE id=$numbers";
-if(pg_query($dbconn, $sql)){
-    echo "Record was deleted successfully.";
-}
-else{
-    echo "ERROR: Could not able to execute $sql. ". mysqli_error($dbconn);
-}
-header( "Location: ../all.html");
+
+$direccion= 'http://127.0.0.1:5000/api/pais/' . $numbers;
+
+echo $direccion;
+
+$update_plan = callAPI('DELETE', $direccion, false);
+
+header( "Location: /CRUD-simulacion/pais/all.html");
 ?>
+

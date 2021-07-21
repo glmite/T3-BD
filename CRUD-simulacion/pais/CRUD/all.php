@@ -1,29 +1,31 @@
 <?php
   include '../../db_config.php';
-
-  // Takes raw data from the request
-$json = file_get_contents('php://input');
-
-// Converts it into a PHP object
-$data = json_decode($json);
-
   $sql = "SELECT * FROM usuario";
   $result = pg_query_params($dbconn, $sql, array());
-  if (pg_num_rows($result) > 0)
-  {
-    while ($row = pg_fetch_assoc($result))
-    {
-      $direccion_read = '<a href="/admin/users/read.html?id=' . $row["id"] . '" class="btn btn-primary">Ver <i class="fas fa-search"></i></a>';
-      //<a href="/admin/users/read.html?id=$ontador" class="btn btn-primary">Ver <i class="fas fa-search"></i></a>
-      $direccion_edit = '<a href="/admin/users/update.html?id=' . $row["id"] . '" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>';
-      //'<a href="/admin/users/update.html?id=$contador" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>'
-      $direccion_delete = '<a href="/admin/users/CRUD/delete.php?id=' . $row["id"] . '" class="btn btn-danger">Borrar <i class="fas fa-trash-alt"></i></a>';
-      //'<a href="/admin/users/CRUD/delete.php?id=$contador class="btn btn-danger">Borrar <i class="fas fa-trash-alt"></i></a>'
-      echo '<tr>' . '<td>' . $row["id"] . '<td>' . $row["nombre"] . '<td>' . $row["apellido"] . '<td>' . $row["correo"] . '<td>' .
+
+
+$json = file_get_contents('http://127.0.0.1:5000/api/pais');
+
+// Converts it into a PHP object
+$pais = json_decode($json,true)['paises'];
+
+foreach($pais as $i => $value){
+
+      $direccion_read = '<a href="/CRUD-simulacion/pais/read.html?id=' . $value["cod_pais"] . '" class="btn btn-primary">Ver <i class="fas fa-search"></i></a>';
+  
+      $direccion_edit = '<a href="/CRUD-simulacion/pais/update.html?id=' . $value["cod_pais"] . '" class="btn btn-warning">Editar <i class="fas fa-edit"></i></a>';
+  
+      $direccion_delete = '<a href="/CRUD-simulacion/pais/CRUD/delete.php?id=' . $value["cod_pais"] . '" class="btn btn-danger">Borrar <i class="fas fa-trash-alt"></i></a>';
+   
+      echo '<tr>' . '<td>' . $value["cod_pais"] . '<td>' . $value["nombre"] .'<td>' .
           $direccion_read . '<td>' .
           $direccion_edit . '<td>' .
-          $direccion_delete;
-    }
-  }
+          $direccion_delete;	
+
+
+}
+
+ 
 /* Este archivo debe manejar la lógica de obtener los datos de todos los usuarios */
 ?>
+
