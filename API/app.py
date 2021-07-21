@@ -178,8 +178,8 @@ def create_cuenta():
  #ELIMINAR
  # Endpoint para eliminar el MONEDA con numero_cuenta igual a <numero_cuenta>
 @app.route('/api/cuenta_bancaria/<numero_cuenta>', methods=['DELETE'])
-def delete_cuenta(id_usuario):
-	cuenta = Cuenta_bancaria.query.filter_by(id_usuario=id_usuario).first()
+def delete_cuenta(numero_cuenta):
+	cuenta = Cuenta_bancaria.query.filter_by(numero_cuenta=numero_cuenta).first()
 	if cuenta is None:
 		return jsonify({'message': 'La cuenta bancaria no existe'}), 404
 
