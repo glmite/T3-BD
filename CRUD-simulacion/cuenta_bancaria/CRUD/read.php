@@ -1,34 +1,42 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT']. '/sesion/valida_sesion.php';
 
-// es esta la manera más eficiente?
-// recordar id usuario
-
-$id = preg_replace('#/admin/users/read.html\?id=#', '', $_SERVER['REQUEST_URI']);
+$id = preg_replace('#/CRUD-simulacion/cuenta_bancaria/read.html\?id=#', '', $_SERVER['REQUEST_URI']);
 
 if($id != '') {
-$query = 
-' SELECT usuario.nombre AS usuario
-,apellido,correo,pais.nombre AS pais
-,fecha_registro,id FROM 
-pais JOIN usuario
- ON usuario.pais=pais.cod_pais
- WHERE id = $1
- ';
 
-$result = pg_query_params($dbconn, $query, array($id));
+$json_cuenta_bancaria = file_get_contents('http://127.0.0.1:5000/api/cuenta_bancaria');
+$json_usuario = file_get_contents('http://127.0.0.1:5000/api/usuario');
 
-if( $result !== FALSE ) {
-    pg_close($dbconn);
-    $info_usuario = pg_fetch_assoc($result);
-} else {
-    echo "Usuario no existe";    
-    pg_close($dbconn);
-}
+$cuenta = json_decode($json_cuenta_bancaria,true)["cuentas"];
+$usuario = json_decode($json_usuario,true)["usuarios"];
+
+//Filtramos el json cuenta
+
+$cuenta = array_filter($cuenta, function ($var) use ($id) {
+    return ($var['numero_cuenta'] == $id);
+});
+
+foreach($cuenta as $i => $value){ $cuenta = $value; }
+
+//Filtramos el json usuario
+
+$cod = $cuenta["id_usuario"];
+
+$usuario = array_filter($usuario, function ($var) use ($cod) {
+    return ($var['id'] == $cod);
+});
+
+foreach($usuario as $i => $value){ $usuario = $value; }
+
+// Guardamos los valores
+$apellido = $usuario["apellido"];
+$nombre = $usuario["nombre"];
+$balance = $cuenta["balance"];
+
 }else{
-    pg_close($dbconn);   
+    pg_close($dbconn);
     header( "Location: /");
 }
-    
+
 
 ?>
