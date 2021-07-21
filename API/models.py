@@ -94,16 +94,17 @@ class Moneda(db.Model):
 
 #Hacer entidad precio_moneda
 class Precio_Moneda(db.Model):
-	__tablename__= 'precio_moneda'
+	_tablename_= 'precio_moneda'
 	id_moneda = db.Column(db.Integer, db.ForeignKey('moneda.id'), primary_key=True ) #PK y FK
 	fecha = db.Column(db.DateTime(), default=db.func.current_timestamp(),primary_key= True) #PK
 	valor = db.Column(db.Float, nullable=False) #atributo flotante no nulo
 
-
 	#Instancia un precio a la moneda
 	@classmethod
 	def create(cls,id_moneda,valor):
-		precio = Precio_Moneda(valor=valor,id_moneda=id_moneda)
+		fecha=datetime.now()
+		fecha=fecha.strftime("%Y-%m-%d %H:%M:%S")
+		precio = Precio_Moneda(valor=valor,id_moneda=id_moneda,fecha=fecha)
 		return precio.save()
 
 	#Guarda el pais
