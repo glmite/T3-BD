@@ -1,4 +1,5 @@
 from flask import Flask
+from datetime import datetime
 from flask import jsonify
 from config import config
 from models import Usuario, Moneda, Pais, Cuenta_bancaria, Precio_Moneda,Usuario_tiene_moneda, db
@@ -131,31 +132,29 @@ def create_precio():
 
 #ELIMINAR
  # Endpoint para eliminar el MONEDA con id igual a <id>
-@app.route('/api/precio/<id>', methods=['DELETE'])
-def delete_precio(id_moneda):
-	precio = Precio_Moneda.query.filter_by(id_moneda=id_moneda).first()
+@app.route('/api/precio/<id_moneda>/<fecha>', methods=['DELETE'])
+def delete_precio(id_moneda,fecha):
+	fecha=fecha.replace("%20"," ")
+	fecha=datetime.strptime(fecha,"%a, %d %b %Y %H:%M:%S GMT")
+	precio = Precio_Moneda.query.filter_by(id_moneda=id_moneda, fecha=fecha).first()
 	if precio is None:
 		return jsonify({'message': 'El precio asociado a esa moneda no existe'}), 404
-
 	precio.delete()
-
 	return jsonify({'Precio': precio.json() })
 
 #ACTUALIZAR
-@app.route('/api/precio/<id>', methods=['PUT'])
-def update_precio(id_moneda):
-	precio = Precio_Moneda.query.filter_by(id_moneda=id_moneda).first()
+@app.route('/api/precio/<id_moneda>/<fecha>', methods=['PUT'])
+def update_precio(id_moneda,fecha):
+	fecha=fecha.replace("%20"," ")
+	fecha=datetime.strptime(fecha,"%a, %d %b %Y %H:%M:%S GMT")
+	precio = Precio_Moneda.query.filter_by(id_moneda=id_moneda,fecha=fecha).first()
 	if precio is None:
 		return jsonify({'message': 'El precio asociado a esa moneda no existe'}), 404
-
 	json = request.get_json(force=True)
-
-	if json.get('valor') is None:
+	if json.get("valor") is None:
 		return jsonify({'message': 'Bad request'}), 400
-	precio.valor = json['valor']
-
+	precio.valor = json["valor"]
 	precio.update()
-
 	return jsonify({'precio': precio.json() })
 
 
@@ -316,7 +315,7 @@ def update_usuario_moneda(id_usuario,id_moneda):
 	return jsonify({'usuario_tiene_moneda': cuenta.json() })
 
 @app.route('/api/consultas/1/<year_reg>', methods=['GET'])
-def get_custom1(year):
+def get_custom1(year_reg):
 	usuarios = [dict(usuario) for usuario in Usuario.custom1(year_reg=year_reg).fetchall()]
 	return jsonify({'Usuarios': usuarios })
 
