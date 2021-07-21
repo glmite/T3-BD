@@ -1,76 +1,90 @@
 <?php
 
+function callAPI($method, $url, $data){
+   $curl = curl_init();
+   switch ($method){
+      case "POST":
+         curl_setopt($curl, CURLOPT_POST, 1);
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+         break;
+      case "PUT":
+         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);			 					
+         break;
+      default:
+         if ($data)
+            $url = sprintf("%s?%s", $url, http_build_query($data));
+   }
+   // OPTIONS:
+   curl_setopt($curl, CURLOPT_URL, $url);
+   curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'APIKEY: 111111111111111111111',
+      'Content-Type: application/json',
+   ));
+   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+   // EXECUTE:
+   $result = curl_exec($curl);
+   if(!$result){die("Connection Failure");}
+   curl_close($curl);
+   return $result;
+}
+
 /* Este archivo debe manejar la lógica de actualizar los datos de un usuario como admin */
+#Se obtiene id moneda de url
+$patrones= array();
+$patrones[0]='/\/CRUD-simulacion\/precio_moneda\/update.html\?id\=/';
+$patrones[1] ='/\/update.html\?fecha\=.*/';
 
-$id = preg_replace('#/admin/users/update.html\?id=#', '', $_SERVER['REQUEST_URI']);
+$sustituciones=array();
+$sustituciones[0]= '';
+$sustituciones[1]= '';
 
+$id_moneda = preg_replace($patrones, $sustituciones, $_SERVER['REQUEST_URI']);
+
+#se obtiene fecha de url
+$patron= '/\/CRUD-simulacion\/precio_moneda\/update.html\?id\=[0-9]+\/update.html\?fecha=/';
+$fecha= preg_replace($patron, '', $_SERVER['REQUEST_URI']);
+
+
+#Método para actualizar
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include '../../../db_config.php';
+    #se obtienen id moneda 
+    $id_moneda= $_POST['id_moneda'];
+    $id_moneda= str_replace(' ', '', $id_moneda);
+    #se obtiene fecha
+    $fecha= $_POST['fecha'];
+    $fecha = str_replace(' ', '%20', $fecha);
+    $fecha= ltrim($fecha, '%20');
+    $fecha= rtrim($fecha, '%20');
 
-    //variables obtenidas de la query    
-    $nombre_usr = $_POST["name"];
-    $apellido_usr = $_POST["surname"];
-    $pais_usr = $_POST["country"];
-    $email = $_POST["email"];
-    $contrasena = $_POST["pwd"];
-    $opciones = array('cost'=>12);
-    $id =$_POST["id"];
+    #dirección para actualizar
+    $direccion= 'http://127.0.0.1:5000/api/precio/' . $id_moneda . '/' . $fecha;
+    #valor a actualizar
+    $data_array =  array( 'valor'   => $_POST['value']);
 
-    //En el caso en que no se haya ingresado contraseña, no se cambia
-    if($contrasena=="") {
-        $sql_sin_contrasena = 
-        'UPDATE usuario  
-        SET nombre=$1,apellido=$2, correo=$3, pais=$4 
-        WHERE ID =$5;';
-        if( pg_query_params($dbconn, $sql_sin_contrasena, array($nombre_usr,$apellido_usr,$email,$pais_usr,$id)) !== FALSE ) {
-            pg_close($dbconn);
-        echo "Dato actualizado con exito";
-        } else {
-            echo "no se pudieron actualizar los datos";
-            pg_close($dbconn);
-        }
-    }else { 
-    $contrasena_hasheada = password_hash($contrasena, PASSWORD_BCRYPT, $opciones);
-    $sql_con_contrasena = 
-    'UPDATE usuario  
-    SET nombre=$1,apellido=$2, correo=$3, contraseña=$4, pais=$5 
-    WHERE ID =$6;';
-    
-    //se verifica si la query funcionó
-    if( pg_query_params($dbconn, $sql_con_contrasena, array($nombre_usr,$apellido_usr,$email, $contrasena_hasheada,$pais_usr,$id)) !== FALSE ) {
-        pg_close($dbconn);
-	echo "Dato actualizado con exito";
-    } else {
-        echo "no se pudieron actualizar los datos";
-        pg_close($dbconn);
-    }
-}
-
-    header( "Location: ../all.html");
+    #actualiza y vuelve a la tabla
+    $update_plan = callAPI('PUT', $direccion , json_encode($data_array));
+    header("Location: /CRUD-simulacion/precio_moneda/all.html");
 } 
-elseif($id != '') {
+elseif($id_moneda != '' and $fecha != '') {
+$json_precios = file_get_contents('http://127.0.0.1:5000/api/precio');
 
-$query = 
-' SELECT usuario.nombre AS usuario
-,apellido,correo,pais.nombre AS pais,
-contraseña,
-pais.cod_pais AS cod_pais, 
-fecha_registro FROM 
-pais JOIN usuario
- ON usuario.pais=pais.cod_pais 
- WHERE id = $1
- ';
- 
-$result = pg_query_params($dbconn, $query, array($id));
-if( $result !== FALSE ) {
-    pg_close($dbconn);
-    $info_usuario = pg_fetch_assoc($result);
-} else {
-    echo "Usuario no existe";    
-    pg_close($dbconn);
-    header("Location: /");
+$precios = json_decode($json_precios,true)["precios"];
+
+//Filtramos el json usuario 
+$precio = array_filter($precios, function ($var) use ($id_moneda, $fecha) {
+    return ($var['id_moneda'] == $id_moneda and $var["fecha"]== $fecha);
+});
+
+foreach($precio as $i => $value){ 
+    #$usuario = $value; $id = $i; 
 }
+
 } else {
-header("Location: /");
+#header("Location: /");
 }
 ?>
