@@ -1,36 +1,36 @@
-<?php 
+<?php
 include '../../db_config.php';
 include '../../include/navbar.html'; ?>
 <?php include 'CRUD/read.php'; ?>
     <div class='container-fluid'>
         <div class="row p-3">
-            <h1>Ver Usuario</h1>
+            <h1>Ver Usuario Tiene Moneda</h1>
         </div>
         <div class="row p-3">
             <div class="col">
                 <div class="container shadow-lg rounded m-auto p-5">
                         <!-- Aquí debe aparecer toda la información relevante del usuario -->
                         <?php
-                        echo ' 
-                         <p>ID: ' . $info_usuario["id"] .'  </p> 
-                        <p>Nombre: ' . $info_usuario["usuario"] . '</p>
-                        <p>Apellido: ' .$info_usuario["apellido"] . '</p>
-                        <p>Correo: ' . $info_usuario["correo"]. '</p>
-                        <p>País: ' . $info_usuario["pais"] . '</p>
-                        <p>Fecha de Ingreso: ' . $info_usuario["fecha_registro"] . '</p> 
+                        echo '
+                        <p>ID Usuario: ' . $id_usuario .'  </p>
+                         <p>Nombre: ' . $nombre .'  </p>
+                         <p>Apellido: ' . $apellido .'  </p>
+                         <p>ID Moneda: ' . $id_moneda .'  </p>
+                        <p>Moneda: ' . $moneda . '</p>
+                        <p>Balance: ' .$balance . '</p>
                         '
                         ?>
 
 
                         <div class='d-flex justify-content-end'>
-                            <a href="/admin/users/all.html" class="btn btn-secondary">Volver</a>
+                            <a href="/CRUD-simulacion/usuario_tiene_moneda/all.html" class="btn btn-secondary">Volver</a>
                             <!-- Estos links deberían tener el ID asociado -->
                             <?php
-                            echo ' 
-                            <a href="/admin/users/update.html?id=' . $id .  '" class="btn btn-warning mx-3">Editar <i class="fas fa-edit"></i></a>
-                            <a href="/admin/users/CRUD/delete.php?id=' . $id . '" class="btn btn-danger">Borrar <i class="fas fa-trash-alt"></i></a></td>
+                            echo '
+                            <a href="/CRUD-simulacion/usuario_tiene_moneda/update.html?id=' . $id .  '" class="btn btn-warning mx-3">Editar <i class="fas fa-edit"></i></a>
+                            <a href="/CRUD-simulacion/usuario_tiene_moneda/CRUD/delete.php?id=' . $id . '" class="btn btn-danger">Borrar <i class="fas fa-trash-alt"></i></a></td>
                             '
-                            ?>                    
+                            ?>
                         </div>
                 </div>
             </div>
