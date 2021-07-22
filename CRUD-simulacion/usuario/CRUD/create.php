@@ -42,6 +42,7 @@ function callAPI($method, $url, $data){
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+$_POST['country'] = preg_replace('/[^0-9]/', '', $_POST['country']);
 // Las siguientes lineas son para obtener el id del ultimo registrado
 $data_array =  array( 'nombre'   => $_POST['name'],
       'apellido'   => $_POST['surname'],
@@ -50,5 +51,6 @@ $data_array =  array( 'nombre'   => $_POST['name'],
       'contraseña' => $_POST['pwd']);
 $update_plan = callAPI('POST', 'http://127.0.0.1:5000/api/usuario', json_encode($data_array));
 }
+print_r($data_array);
 header("Location: /CRUD-simulacion/usuario/all.html");
 ?>
