@@ -51,7 +51,6 @@ $json_cuenta = file_get_contents('http://127.0.0.1:5000/api/usuario_tiene_moneda
 $cuenta = json_decode($json_cuenta,true)["usuario moneda"];
 
 //Filtramos el json moneda
-print_r($cuenta);
 $cuenta = array_filter($cuenta, function ($var) use ($ida) {
     return ($var['id_usuario'] == $ida[0] and $var['id_moneda'] == $ida[1]);
 });
