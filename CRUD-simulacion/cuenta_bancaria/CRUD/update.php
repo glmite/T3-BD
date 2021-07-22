@@ -1,75 +1,67 @@
 <?php
 
+function callAPI($method, $url, $data){
+   $curl = curl_init();
+   switch ($method){
+      case "POST":
+         curl_setopt($curl, CURLOPT_POST, 1);
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+         break;
+      case "PUT":
+         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+         if ($data)
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+         break;
+      default:
+         if ($data)
+            $url = sprintf("%s?%s", $url, http_build_query($data));
+   }
+   // OPTIONS:
+   curl_setopt($curl, CURLOPT_URL, $url);
+   curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+      'APIKEY: 111111111111111111111',
+      'Content-Type: application/json',
+   ));
+   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+   curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+   // EXECUTE:
+   $result = curl_exec($curl);
+   if(!$result){die("Connection Failure");}
+   curl_close($curl);
+   return $result;
+}
+
 /* Este archivo debe manejar la lógica de actualizar los datos de un usuario como admin */
 
-$id = preg_replace('#/admin/users/update.html\?id=#', '', $_SERVER['REQUEST_URI']);
-
+$id = preg_replace('#/CRUD-simulacion/cuenta_bancaria/update.html\?id=#', '', $_SERVER['REQUEST_URI']);
+$idef = explode('=',$id);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include '../../../db_config.php';
+    // takes raw data from the request
+    $json = file_get_contents('php://input');
+    $ide = str_replace(' ', '', $_POST['id']);
+    $update_plan = callAPI('PUT', 'http://127.0.0.1:5000/api/cuenta_bancaria/' . $ide , json_encode($_POST));
 
-    //variables obtenidas de la query    
-    $nombre_usr = $_POST["name"];
-    $apellido_usr = $_POST["surname"];
-    $pais_usr = $_POST["country"];
-    $email = $_POST["email"];
-    $contrasena = $_POST["pwd"];
-    $opciones = array('cost'=>12);
-    $id =$_POST["id"];
-
-    //En el caso en que no se haya ingresado contraseña, no se cambia
-    if($contrasena=="") {
-        $sql_sin_contrasena = 
-        'UPDATE usuario  
-        SET nombre=$1,apellido=$2, correo=$3, pais=$4 
-        WHERE ID =$5;';
-        if( pg_query_params($dbconn, $sql_sin_contrasena, array($nombre_usr,$apellido_usr,$email,$pais_usr,$id)) !== FALSE ) {
-            pg_close($dbconn);
-        echo "Dato actualizado con exito";
-        } else {
-            echo "no se pudieron actualizar los datos";
-            pg_close($dbconn);
-        }
-    }else { 
-    $contrasena_hasheada = password_hash($contrasena, PASSWORD_BCRYPT, $opciones);
-    $sql_con_contrasena = 
-    'UPDATE usuario  
-    SET nombre=$1,apellido=$2, correo=$3, contraseña=$4, pais=$5 
-    WHERE ID =$6;';
-    
-    //se verifica si la query funcionó
-    if( pg_query_params($dbconn, $sql_con_contrasena, array($nombre_usr,$apellido_usr,$email, $contrasena_hasheada,$pais_usr,$id)) !== FALSE ) {
-        pg_close($dbconn);
-	echo "Dato actualizado con exito";
-    } else {
-        echo "no se pudieron actualizar los datos";
-        pg_close($dbconn);
-    }
+    header("Location: /CRUD-simulacion/cuenta_bancaria/all.html");
 }
-
-    header( "Location: ../all.html");
-} 
 elseif($id != '') {
 
-$query = 
-' SELECT usuario.nombre AS usuario
-,apellido,correo,pais.nombre AS pais,
-contraseña,
-pais.cod_pais AS cod_pais, 
-fecha_registro FROM 
-pais JOIN usuario
- ON usuario.pais=pais.cod_pais 
- WHERE id = $1
- ';
- 
-$result = pg_query_params($dbconn, $query, array($id));
-if( $result !== FALSE ) {
-    pg_close($dbconn);
-    $info_usuario = pg_fetch_assoc($result);
-} else {
-    echo "Usuario no existe";    
-    pg_close($dbconn);
-    header("Location: /");
-}
+$json_cuenta = file_get_contents('http://127.0.0.1:5000/api/cuenta_bancaria');
+
+$cuenta = json_decode($json_cuenta,true)["cuentas"];
+
+//Filtramos el json moneda
+
+$cuenta = array_filter($cuenta, function ($var) use ($id) {
+    return ($var['numero_cuenta'] == $id);
+});
+
+foreach($cuenta as $i => $value){ $cuenta = $value; }
+
+// Guardamos los valores
+
+$balance = $cuenta["balance"];
+
 } else {
 header("Location: /");
 }
