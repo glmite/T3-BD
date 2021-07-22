@@ -1,4 +1,4 @@
-<?php 
+<?php
 include '../../db_config.php';
 include '../../include/navbar.html';
 include 'CRUD/update.php'; ?>
@@ -14,7 +14,7 @@ include 'CRUD/update.php'; ?>
                         <div class="form-group">
                             <input type="hidden" name="id" value=" <?php echo $identificador ?> " />
                             <?php
-                            echo ' 
+                            echo '
                             <label for="name">Nombre</label>
                             <input type="text" class="form-control" placeholder="nombre" value="' . $nombre . '" id="name" name = "nombre" required>
                         </div>
@@ -33,20 +33,22 @@ include 'CRUD/update.php'; ?>
                         '
                         ?>
                         <!-- NOTA: Los valores están en duro para esta tarea. -->
-                       
+
                         <div class="form-group"  >
                             <label for="country">País</label>
-                            <select class="form-control" name = "pais" id="country"  >
-                                <option value='<?php echo $cod_pais?>' hidden selected='selected'><?php echo $pais?></option>
-                              <option value="1">Chile</option>
-                              <option value="2">Sudáfrica</option>
-                              <option value="3">Canadá</option>
-                              <option value="4">Estados Unidos</option>
-                              <option value="6">Australia</option>
-                              <option value="7">India</option>
-                              <option value="8">Corea del Sur</option>
-                              <option value="9">Rusia</option>
-                              <option value="10">Suiza</option>
+                            <select class="form-control" name = "pais" id="country">
+                            <option value='<?php echo $cod_pais?>' hidden selected='selected'><?php echo $pais?></option>
+                              <?php
+                                $json = file_get_contents('http://127.0.0.1:5000/api/pais');
+                                // Converts it into a PHP object
+                                $pais = json_decode($json,true)['paises'];
+                                foreach($pais as $i => $value){
+                                if ($value['cod_pais'] != $pais['cod_pais']){
+                                  echo '<option value=' . $value['cod_pais'] . '>' . $value['nombre'] . '</option >';
+                                }
+                              }
+                              /* Este archivo debe manejar la lógica de obtener los datos de todos los usuarios */
+                              ?>
                             </select>
                           </div>
 
