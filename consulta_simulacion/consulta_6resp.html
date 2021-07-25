@@ -18,7 +18,7 @@ include '../include/navbar.html'; ?>
                     <thead>
                         <tr>
                             <th scope="col">Moneda</th>
-                            <th scope="col">Veces que cambió</th>
+                            <th scope="col">Cantidad</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,8 +30,11 @@ include '../include/navbar.html'; ?>
 
                             // Converts it into a PHP object
                             $moneda = json_decode($json,true);
-                            echo '<tr>' . '<td>' . $moneda["sigla"] . '<td>' . $moneda["Cantidad"] .'<td>';
 
+                            foreach($moneda as $i => $value){
+
+                                  echo '<tr>' . '<td>' . $i . '<td>' . $value .'<td>' ;
+                            }
                             ?>
                         </tr>
                     </tbody>
