@@ -1,0 +1,50 @@
+<?php
+include '../db_config.php';
+include '../include/navbar.html'; ?>
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Consulta 1</h1>
+    </div>
+    <div class="row p-3">
+
+        <div class="col">
+          <div class="row p-3">
+              <h3>Todos los usuarios registrados durante el año pedido son:</h3>
+          </div>
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <?php
+                            $json = file_get_contents('http://127.0.0.1:5000/api/consultas/1/' . $_POST["year"]);
+
+                            // Converts it into a PHP object
+                            $pais = json_decode($json,true)['Usuarios'];
+
+                            foreach($pais as $i => $value){
+
+                                  echo '<tr>' . '<td>' . $value["nombre"] . '<td>' . $value["apellido"] .'<td>' . $value["fecha_registro"] .'<td>' ;
+                            }
+                            ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="http://localhost/simulacion.html" class="btn btn-primary">Volver </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

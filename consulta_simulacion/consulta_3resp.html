@@ -1,0 +1,61 @@
+<?php
+include '../db_config.php';
+include '../include/navbar.html'; ?>
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Consulta 3</h1>
+    </div>
+    <div class="row p-3">
+
+        <div class="col">
+          <div class="row p-3">
+              <h3>Todos los usuarios registrados pertenecientes al pais X son:</h3>
+          </div>
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Pais</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <?php
+                            $cod_pais = preg_replace('/[^0-9]/', '', $_POST['country']);
+                            $json = file_get_contents('http://127.0.0.1:5000/api/pais');
+
+                            // Converts it into a PHP object
+                            $pais = json_decode($json,true)['paises'];
+
+                            foreach($pais as $i => $value){
+                                      if ($pais[$i]["cod_pais"] == $cod_pais){
+                                        $nombrep=$pais[$i]["nombre"];
+                                      }
+                            }
+                            $json = file_get_contents('http://127.0.0.1:5000/api/consultas/3/' . $cod_pais);
+
+                            // Converts it into a PHP object
+                            $usuario = json_decode($json,true)['Usuarios'];
+
+                            foreach($usuario as $i => $value){
+
+                                  echo '<tr>' . '<td>' . $nombrep . '<td>' . $value["nombre"] .'<td>' . $value["nombre"] .'<td>';
+                            }
+                            ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="http://localhost/simulacion.html" class="btn btn-primary">Volver </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

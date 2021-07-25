@@ -1,0 +1,28 @@
+<?php
+include $_SERVER['DOCUMENT_ROOT']. '/include/navbar.html'; ?>
+    <div class='container-fluid'>
+        <div class="row p-3">
+            <h1>Consulta 1</h1>
+        </div>
+        <div class="row p-3">
+            <div class="col">
+                <div class="container shadow-lg rounded m-auto p-5">
+<!-- Se agregó el metodo post -->
+                    <form action="/consulta_simulacion/consulta_1resp.html" method="POST">
+                        <div>Obtener todos los usuarios registrados durante el año X</div>
+                        <div class="form-group">
+                            <label for="year">Ingrese el año en la siguiente casilla: </label>
+                            <input type="number" class="form-control" placeholder="Año" name ="year" id="year" required>
+                        </div>
+                        <div class='d-flex justify-content-end'>
+                            <a class="btn btn-secondary mx-3" href="http://localhost/simulacion.html">Volver</a>
+                            <button type="submit" class="btn btn-primary">Realizar consulta</button>
+                        </div>
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
