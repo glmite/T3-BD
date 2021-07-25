@@ -90,6 +90,25 @@ class Moneda(db.Model):
 			return True
 		except:
 			return False
+	def custom6():
+		try:
+			result= db.session.execute(
+"""SELECT DISTINCT
+    Moneda.sigla, COUNT(Usuario_tiene_moneda.id_usuario) AS "Cantidad"
+FROM 
+    Moneda
+    INNER JOIN Usuario_tiene_moneda
+    ON Moneda.id = Usuario_tiene_moneda.id_moneda
+GROUP BY
+    Moneda.sigla
+ORDER BY
+    COUNT(Usuario_tiene_moneda.id_usuario) DESC
+LIMIT 3;
+""")
+			return result
+		except:
+			return False
+
 
 
 #Hacer entidad precio_moneda
