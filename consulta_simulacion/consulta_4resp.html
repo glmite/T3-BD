@@ -26,7 +26,6 @@ include '../include/navbar.html'; ?>
                         <!-- Link de las Acciones debe llevar el ID del usuario -->
                         <tr>
                             <?php
-                            print ($_POST["money"]);
                             $json = file_get_contents('http://127.0.0.1:5000/api/moneda');
 
                             // Converts it into a PHP object
@@ -41,7 +40,6 @@ include '../include/navbar.html'; ?>
 
                             // Converts it into a PHP object
                             $usuario = json_decode($json,true)['max_valor'];
-                            print ($usuario);
 
                             echo '<tr>' . '<td>' . $_POST["money"] . '<td>' . $usuario .'<td>';
                             ?>
