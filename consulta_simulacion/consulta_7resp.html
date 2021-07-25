@@ -1,0 +1,46 @@
+<?php
+include '../db_config.php';
+include '../include/navbar.html'; ?>
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Consulta 7</h1>
+    </div>
+    <div class="row p-3">
+
+        <div class="col">
+          <div class="row p-3">
+              <h3>La suma de la moneda pedida en circulación es igual a:</h3>
+          </div>
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Moneda</th>
+                            <th scope="col">Veces que cambió</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <?php
+                            $json = file_get_contents('http://127.0.0.1:5000/api/consultas/7/' . $_POST["mes"]);
+
+                            // Converts it into a PHP object
+                            $moneda = json_decode($json,true);
+                            echo '<tr>' . '<td>' . $moneda["Moneda"] . '<td>' . $moneda["Veces que cambió valor"] .'<td>';
+
+                            ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="http://localhost/simulacion.html" class="btn btn-primary">Volver </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

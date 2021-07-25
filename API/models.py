@@ -141,6 +141,25 @@ class Precio_Moneda(db.Model):
 		except:
 			return False
 
+	def custom7(mes):
+		try:
+			result= db.session.execute(
+"""SELECT DISTINCT
+    Moneda.nombre as "Moneda", COUNT(Precio_moneda.valor) as "Veces que cambió valor"
+FROM 
+    Precio_moneda
+    INNER JOIN Moneda
+    ON Precio_moneda.id_moneda = Moneda.id
+WHERE
+    EXTRACT(MONTH FROM precio_moneda.fecha)=:mes
+GROUP BY
+    Moneda.nombre
+ORDER BY
+    COUNT(Precio_moneda.valor) DESC
+Limit 1;""",{'mes':mes})
+			return result
+		except:
+			return False
 
 #Creamos entidad cuenta_bancaria(asumo que el numero se hace solo)
 class Cuenta_bancaria(db.Model):
