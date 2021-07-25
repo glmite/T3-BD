@@ -345,7 +345,12 @@ def get_custom5(id_moneda):
 @app.route('/api/consultas/7/<mes>', methods=['GET'])
 def get_custom7(mes):
 	# moneda = [dict(moneda) for moneda in Precio_Moneda.custom7(mes=mes).fetchall()]
-	return jsonify(dict(Precio_Moneda.custom7(mes=mes).fetchall()[0]))	
+	return jsonify(dict(Precio_Moneda.custom7(mes=mes).fetchall()[0]))
+
+@app.route('/api/consultas/6', methods=['GET'])
+def get_custom6():
+	# moneda = [dict(moneda) for moneda in Precio_Moneda.custom7(mes=mes).fetchall()]
+	return jsonify(dict(Moneda.custom6().fetchall()[0]))	
 
 if __name__ == '__main__':
 	app.run(debug=True)
