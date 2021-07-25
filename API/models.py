@@ -94,7 +94,7 @@ class Moneda(db.Model):
 
 #Hacer entidad precio_moneda
 class Precio_Moneda(db.Model):
-	_tablename_= 'precio_moneda'
+	__tablename__= 'precio_moneda'
 	id_moneda = db.Column(db.Integer, db.ForeignKey('moneda.id'), primary_key=True ) #PK y FK
 	fecha = db.Column(db.DateTime(), default=db.func.current_timestamp(),primary_key= True) #PK
 	valor = db.Column(db.Float, nullable=False) #atributo flotante no nulo
@@ -298,3 +298,4 @@ class Usuario_tiene_moneda(db.Model):
 			return result
 		except:
 			return False
+
