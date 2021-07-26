@@ -352,5 +352,18 @@ def get_custom6():
 	# moneda = [dict(moneda) for moneda in Precio_Moneda.custom7(mes=mes).fetchall()]
 	return jsonify(dict(Moneda.custom6().fetchall()))	
 
+@app.route('/api/consultas/8/<id_usuario>', methods=['GET'])
+def get_custom8(id_usuario):
+    custom = Usuario_tiene_moneda.custom8(id_usuario=id_usuario).fetchall()
+    if(len(custom)>0):
+        usuario_moneda = custom[0]
+        nombre = usuario_moneda["Nombre"]
+        apellido = usuario_moneda["Apellido"]
+        moneda = usuario_moneda["Nombre Moneda"]
+        cantidad = float(usuario_moneda["Cantidad"])
+        return jsonify({'nombre':nombre,'apellido':apellido,"moneda":moneda,"cantidad":cantidad})
+    else:
+        return jsonify({"moneda":"No tiene","cantidad":0})
+
 if __name__ == '__main__':
 	app.run(debug=True)
