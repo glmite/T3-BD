@@ -1,0 +1,62 @@
+<?php
+include '../db_config.php';
+include '../include/navbar.html'; ?>
+
+<div class='container-fluid'>
+    <div class="row p-3">
+        <h1>Consulta 8</h1>
+    </div>
+    <div class="row p-3">
+
+        <div class="col">
+          <div class="row p-3">
+              <h3>La moneda mas abudante del usuario pedido es:</h3>
+          </div>
+            <!-- Mostrar aquí los datos de cada usuario -->
+            <div class="container shadow-lg rounded m-auto p-5">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+			    <th scope="col">Apellido</th>
+                            <th scope="col">Moneda</th>
+			    <th scope="col">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Debería haber una de estas por cada usuario -->
+                        <!-- Link de las Acciones debe llevar el ID del usuario -->
+                        <tr>
+                            <?php
+
+                            $json = file_get_contents('http://127.0.0.1:5000/api/consultas/8/' . $_POST["id"]);
+
+                            // Converts it into a PHP object
+                            $usuario_moneda = json_decode($json,true);
+
+			if(empty($usuario_moneda["nombre"])){
+				$json_usuario = file_get_contents('http://127.0.0.1:5000/api/usuario');
+		                $usuario = json_decode($json_usuario,true)["usuarios"];
+                                $id =  $_POST["id"];
+				$usuario = array_filter($usuario, function ($var) use ($id) {
+    					return ($var['id'] == $id);
+				});
+
+			foreach($usuario as $i => $value){ $usuario = $value; }
+
+			$usuario_moneda["nombre"] = $usuario["nombre"]; $usuario_moneda["apellido"] = $usuario["apellido"];}
+
+                            echo '<tr>' . '<td>' . $usuario_moneda["nombre"] . '<td>' . $usuario_moneda["apellido"] .'<td>'. $usuario_moneda["moneda"] .'<td>'. $usuario_moneda["cantidad"] .'<td>';
+
+                            ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="http://localhost/simulacion.html" class="btn btn-primary">Volver </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

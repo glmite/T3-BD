@@ -1,0 +1,44 @@
+<?php
+include $_SERVER['DOCUMENT_ROOT']. '/include/navbar.html'; ?>
+    <div class='container-fluid'>
+        <div class="row p-3">
+            <h1>Consulta 8</h1>
+        </div>
+        <div class="row p-3">
+            <div class="col">
+                <div class="container shadow-lg rounded m-auto p-5">
+<!-- Se agregó el metodo post -->
+
+
+
+                    <form action="/consulta_simulacion/consulta_8resp.html" method="POST">
+                        <div> Obtener la criptomoneda más abundante del usuario X</div>
+                            <select class="form-control" name = "id" id="id">
+                              <?php
+
+                              $json = file_get_contents('http://127.0.0.1:5000/api/usuario');
+
+                              // Converts it into a PHP object
+                              $usuario = json_decode($json,true)['usuarios'];
+          
+                              foreach($usuario as $i => $value){
+                                        echo '
+                                        <option value="' . $value['id']. '">' . $value['nombre'] . '</option>
+                                        ';
+                              }
+			     ?>
+     </select>
+                          </div>
+                            <div class='d-flex justify-content-end'>
+                                <a class="btn btn-secondary mx-3" href="http://localhost/simulacion.html">Volver</a>
+                                <button type="submit" class="btn btn-primary">Realizar consulta</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
