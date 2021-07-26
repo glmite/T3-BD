@@ -336,10 +336,9 @@ class Usuario_tiene_moneda(db.Model):
 			return result
 		except:
 			return False
-
-def custom8(id_usuario):
-                try:
-                        result= db.session.execute('''SELECT
+	def custom8(id_usuario):
+		try:
+			result= db.session.execute('''SELECT
     Usuario.nombre as "Nombre", Usuario.apellido as "Apellido", Moneda.nombre AS "Nombre Moneda", Usuario_tiene_moneda.balance as "Cantidad"
 FROM
     Usuario_tiene_moneda INNER JOIN Usuario
@@ -353,9 +352,8 @@ WHERE
 ORDER BY
     Usuario_tiene_moneda.balance DESC
 Limit 1;''',{'id_usuario':id_usuario})
-                        print(result)
-                        
-                        return result
-                except:
-                        return False
+			return result
+		except:
+			return False
+
 
