@@ -7,7 +7,7 @@
 * Amanda Salinas Pinto - 201810013-7
 
 ## Uso:
-* Para inicializar el servidor, se tiene que utilizar el comando **"flask run"**.
+* Para inicializar el servidor, se tiene que utilizar el comando **"flask run"** en la carpeta **API**.
 
 ## Formato:
 * Se agrega el archivo **simulacion.html**, el cual contiene la pagina que presenta la interfaz para consultas y el CRUD.
